@@ -1,8 +1,6 @@
 'use strict';
 
-// Webcomponents try-out as documented at:
 // https://developer.mozilla.org/en-US/docs/Web/Web_Components
-// 
 // optional attributes are 'min-date', 'max-date'
 
 class datePicker extends HTMLElement {
@@ -13,133 +11,120 @@ class datePicker extends HTMLElement {
 
     let elementRef = this;
 
-    elementRef.input = document.createElement('input');
-    elementRef.input.type = 'date';
-
-    elementRef.pickDate = pickDate;
-    elementRef.close = close;
-    elementRef.shiftMonth = shiftMonth;
-    elementRef.showMonth = showMonth;
-    elementRef.showYear = showYear;
-    elementRef.setToday = setToday;
-    elementRef.dateTypeSupport = dateTypeSupport;
-    elementRef.labels = {
+    let labels = {
       days: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za','Zo'],
       months: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']
     }
 
+    elementRef.currentDate = new Date();
+    elementRef.startDate = elementRef.getAttribute('min-date') || null;
+    elementRef.endDate = elementRef.getAttribute('max-date') || null;
+
     let shadowRef = this.attachShadow({mode: 'open'});
-
-    function init() {
-      // init days
-      elementRef.days = [];
-      elementRef.currentDate = new Date();
-      elementRef.isVisible = elementRef.isVisible || false;
-      elementRef.input.value = formatDate(elementRef.currentDate);
-
-      elementRef.startDate = elementRef.getAttribute('min-date') || null;
-      elementRef.endDate = elementRef.getAttribute('max-date') || null;
-
-      buildCalendar();
-    }
-
-    init();
     
     function DOMRender(){
-      let dpStyle = document.createElement('style');
-      dpStyle.textContent = '@import "datepicker.component.css"';
+      let _DOM = elementRef;
 
-      let dpWrapper = document.createElement('div');
-      dpWrapper.className ='date-picker--wrapper';
+      _DOM._style = document.createElement('style');
+      _DOM._style.textContent = '@import "datepicker.component.css"';
 
-      let dpClickout = document.createElement('div');
-      dpClickout.className = 'date-picker--clickout';
+      _DOM.wrapper = document.createElement('div');
+      _DOM.wrapper.className ='date-picker--wrapper';
 
-      let dpInner = document.createElement('div');
-      dpInner.className = 'date-picker--inner';
+      _DOM.inner = document.createElement('div');
+      _DOM.inner.className = 'date-picker--inner';
 
-      let dpHeader = document.createElement('div');
-      dpHeader.className = 'date-picker--header';
+      _DOM.header = document.createElement('div');
+      _DOM.header.className = 'date-picker--header';
 
-      let dpBtnPrev = document.createElement('div');
-      dpBtnPrev.className = 'date-picker--prev';
-      dpBtnPrev.onclick = function(){
+      _DOM.btnPrev = document.createElement('div');
+      _DOM.btnPrev.className = 'date-picker--prev';
+      _DOM.btnPrev.onclick = function(){
         shiftMonth(-1);
       }
 
-      let dpBtnNext = document.createElement('div');
-      dpBtnNext.className = 'date-picker--next';
-      dpBtnNext.onclick = function(){
+      _DOM.btnNext = document.createElement('div');
+      _DOM.btnNext.className = 'date-picker--next';
+      _DOM.btnNext.onclick = function(){
         shiftMonth(1);
       }
 
-      let dpMonthYear = document.createElement('div');
-      dpMonthYear.className = 'date-picker--month-year';
+      _DOM.monthYear = document.createElement('div');
+      _DOM.monthYear.className = 'date-picker--month-year';
 
-      let dpMonth = document.createElement('div');
-      dpMonth.className = 'date-picker--month';
-      dpMonth.innerText = showMonth();
+      _DOM.month = document.createElement('div');
+      _DOM.month.className = 'date-picker--month';
+      _DOM.month.innerText = showMonth();
 
-      let dpYear = document.createElement('div');
-      dpYear.className = 'date-picker--year';
-      dpYear.innerText = showYear();
+      _DOM.year = document.createElement('div');
+      _DOM.year.className = 'date-picker--year';
+      _DOM.year.innerText = showYear();
 
-      let dpBody = document.createElement('div');
-      dpBody.className = 'date-picker--body';
+      _DOM.body = document.createElement('div');
+      _DOM.body.className = 'date-picker--body';
+
+      _DOM.labels = document.createElement('div');
+      _DOM.labels.className = 'date-picker--labels';
+
+      _DOM.calendar = document.createElement('div');
+      _DOM.calendar.className = 'date-picker--calendar';
+
+      _DOM.footer = document.createElement('div');
+      _DOM.footer.className = 'date-picker--footer';
 
       // Build DOM
-      shadowRef.innerHTML = ''; // reset DOM
+      shadowRef.appendChild(_DOM._style);
+      shadowRef.appendChild(_DOM.wrapper);
+      _DOM.wrapper.appendChild(_DOM.inner);
+      _DOM.inner.appendChild(_DOM.header);
+      _DOM.header.appendChild(_DOM.btnPrev);
+      _DOM.header.appendChild(_DOM.monthYear);
+      _DOM.header.appendChild(_DOM.btnNext);
 
-      shadowRef.appendChild(dpStyle);
-      shadowRef.appendChild(elementRef.input);
+      _DOM.monthYear.appendChild(_DOM.month);
+      _DOM.monthYear.appendChild(_DOM.year);
 
-      shadowRef.appendChild(dpWrapper);
-      dpWrapper.appendChild(dpClickout);
-      dpWrapper.appendChild(dpInner);
+      _DOM.inner.appendChild(_DOM.body);
+      _DOM.body.appendChild(_DOM.labels);
+      _DOM.body.appendChild(_DOM.calendar);
 
-      dpInner.appendChild(dpHeader);
-      dpHeader.appendChild(dpBtnPrev);
-      dpHeader.appendChild(dpMonthYear);
-      dpHeader.appendChild(dpBtnNext);
-
-      dpMonthYear.appendChild(dpMonth);
-      dpMonthYear.appendChild(dpYear);
-
-      dpInner.appendChild(dpBody);
-
-      // render labels
-      for (let i in elementRef.labels.days) {
-        let l = document.createElement('div');
-        l.className = 'date-picker--day-of-week';
-        l.innerText = elementRef.labels.days[i];
-        dpBody.appendChild(l);
-      }
-
-      // render days
-      for (let i in elementRef.days) {
-        let d = document.createElement('div');
-        
-        d.className = 'date-picker--day';
-        d.innerText = elementRef.days[i].daytitle;
-        d.onclick = function(){
-          pickDate(elementRef.days[i].value);
-        };
-
-        if (elementRef.days[i].isNotInMonth) d.className += ' date-picker--edge-day';
-        if (elementRef.days[i].isSelected) d.className += ' date-picker--selected';
-        if (elementRef.days[i].isToday) d.className += ' date-picker--day-today';
-        if (elementRef.days[i].isSelectable) d.className += ' date-picker--selectable';
-
-        dpBody.appendChild(d);
-      }
-
-      let dpFooter = document.createElement('div');
-      dpFooter.className = 'date-picker--footer';
-
-      dpInner.appendChild(dpFooter);
+      _DOM.inner.appendChild(_DOM.footer);
     }
 
     DOMRender();
+
+    function renderLabels(labelsArray){
+      for (let label in labelsArray) {
+        let l = document.createElement('div');
+        l.className = 'date-picker--day-of-week';
+        l.innerText = labelsArray[label];
+        elementRef.labels.appendChild(l);
+      }
+    }
+    renderLabels(labels.days);
+
+    function renderDays(daysArray){
+      elementRef.calendar.innerHTML = ''; // reset calendar
+      for (let day in daysArray) {
+        let d = document.createElement('div');
+        d.className = 'date-picker--day';
+        d.innerText = daysArray[day].daytitle;
+        d.onclick = function(){
+          console.log(daysArray[day]);
+          console.log(day);
+
+          pickDate(daysArray[day].value);
+        };
+
+        if (daysArray[day].isNotInMonth) d.className += ' date-picker--edge-day';
+        if (daysArray[day].isSelected) d.className += ' date-picker--selected';
+        if (daysArray[day].isToday) d.className += ' date-picker--day-today';
+        if (daysArray[day].isSelectable) d.className += ' date-picker--selectable';
+
+        elementRef.calendar.appendChild(d);
+      }
+    }
+    renderDays(calendarObject());
   
     function formatNumber(number){
       if (number < 10) {
@@ -155,18 +140,15 @@ class datePicker extends HTMLElement {
   
     function pickDate(date){
       setDate(date);
-      elementRef.input.value = formatDate(date);
-      buildCalendar();
+      renderDays(calendarObject());
     }
   
     function setDate(date){
-      if (date) {
-        elementRef.currentDate = new Date(date);
-      }
+      elementRef.currentDate = new Date(date);
     }
   
     function showMonth(){
-      return elementRef.labels.months[elementRef.currentDate.getMonth()];
+      return labels.months[elementRef.currentDate.getMonth()];
     }
   
     function showYear(){
@@ -192,28 +174,19 @@ class datePicker extends HTMLElement {
     }
   
     function isSelected(date){
-      return (formatDate(date) === formatDate(elementRef.input.value));
+      return (formatDate(date) === formatDate(elementRef.currentDate));
     }
   
     function shiftMonth(val){
       var dt = new Date(elementRef.currentDate);
       dt.setMonth(dt.getMonth() + val);
       elementRef.currentDate = dt;
-      buildCalendar();
-      DOMRender();
+      renderDays(calendarObject());
     }
   
-    function dateTypeSupport(){
-      // check for input type date support
-      var el = document.createElement('input'), invalidVal = 'foo';
-      el.setAttribute('type', 'date');
-      el.setAttribute('value', invalidVal);
-      return el.value !== invalidVal;
-    }
-  
-    function buildCalendar(){
+    function calendarObject(){
       let iteration = new Date(elementRef.currentDate);
-      elementRef.days = [];
+      let days = [];
  
       iteration.setDate(1); // First of the month
       iteration.setDate((iteration.getDate() - iteration.getDay()) + 1); // Back to monday
@@ -228,9 +201,11 @@ class datePicker extends HTMLElement {
         obj.value = formatDate(iteration);
         obj.isSelectable = beforeEndDate() && afterStartDate();
   
-        elementRef.days.push(obj);
+        days.push(obj);
         iteration.setDate(obj.daytitle + 1);
       }
+
+      return days;
     }
   }
 

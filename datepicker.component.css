@@ -97,7 +97,10 @@
 .date-picker--next {
   right: 0;
 }
-
+.date-picker--prev:hover,
+.date-picker--next:hover {
+  cursor: pointer;
+}
 
 .date-picker--body {
   text-align: center;
