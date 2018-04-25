@@ -72,6 +72,13 @@ class datePicker extends HTMLElement {
       _DOM.footer = document.createElement('div');
       _DOM.footer.className = 'date-picker--footer';
 
+      _DOM.btnToday = document.createElement('div');
+      _DOM.btnToday.className = 'date-picker--today';
+      _DOM.btnToday.innerText = 'vandaag';
+      _DOM.btnToday.onclick = function(){
+        setToday();
+      }
+
       // Build DOM
       shadowRef.appendChild(_DOM._style);
       shadowRef.appendChild(_DOM.wrapper);
@@ -89,6 +96,7 @@ class datePicker extends HTMLElement {
       _DOM.body.appendChild(_DOM.calendar);
 
       _DOM.inner.appendChild(_DOM.footer);
+      _DOM.footer.appendChild(_DOM.btnToday);
     }
 
     DOMRender();
@@ -103,7 +111,7 @@ class datePicker extends HTMLElement {
     }
     renderLabels(labels.days);
 
-    function renderDays(daysArray){
+    function renderCalendar(daysArray){
       elementRef.calendar.innerHTML = ''; // reset calendar
       for (let day in daysArray) {
         let d = document.createElement('div');
@@ -111,8 +119,6 @@ class datePicker extends HTMLElement {
         d.innerText = daysArray[day].daytitle;
         d.onclick = function(){
           console.log(daysArray[day]);
-          console.log(day);
-
           pickDate(daysArray[day].value);
         };
 
@@ -124,7 +130,7 @@ class datePicker extends HTMLElement {
         elementRef.calendar.appendChild(d);
       }
     }
-    renderDays(calendarObject());
+    renderCalendar(daysObject());
   
     function formatNumber(number){
       if (number < 10) {
@@ -140,7 +146,7 @@ class datePicker extends HTMLElement {
   
     function pickDate(date){
       setDate(date);
-      renderDays(calendarObject());
+      renderCalendar(daysObject());
     }
   
     function setDate(date){
@@ -178,13 +184,14 @@ class datePicker extends HTMLElement {
     }
   
     function shiftMonth(val){
-      var dt = new Date(elementRef.currentDate);
-      dt.setMonth(dt.getMonth() + val);
-      elementRef.currentDate = dt;
-      renderDays(calendarObject());
+      let date = new Date(elementRef.currentDate);
+      date.setMonth(date.getMonth() + val);
+      elementRef.currentDate = date;
+      elementRef.month.innerText = showMonth();
+      renderCalendar(daysObject());
     }
   
-    function calendarObject(){
+    function daysObject(){
       let iteration = new Date(elementRef.currentDate);
       let days = [];
  
