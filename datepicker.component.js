@@ -10,13 +10,13 @@ class datePicker extends HTMLElement {
     super();
 
     let elementRef = this;
+    let currentDate = new Date();
+    const todayDate = new Date();
 
     let labels = {
-      days: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za','Zo'],
+      daysOfWeek: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za','Zo'],
       months: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']
     }
-
-    elementRef.currentDate = new Date();
     elementRef.startDate = elementRef.getAttribute('min-date') || null;
     elementRef.endDate = elementRef.getAttribute('max-date') || null;
 
@@ -54,11 +54,11 @@ class datePicker extends HTMLElement {
 
       _DOM.month = document.createElement('div');
       _DOM.month.className = 'date-picker--month';
-      _DOM.month.innerText = showMonth();
+      _DOM.month.innerText = currentMonth();
 
       _DOM.year = document.createElement('div');
       _DOM.year.className = 'date-picker--year';
-      _DOM.year.innerText = showYear();
+      _DOM.year.innerText = currentYear();
 
       _DOM.body = document.createElement('div');
       _DOM.body.className = 'date-picker--body';
@@ -76,7 +76,7 @@ class datePicker extends HTMLElement {
       _DOM.btnToday.className = 'date-picker--today';
       _DOM.btnToday.innerText = 'vandaag';
       _DOM.btnToday.onclick = function(){
-        setToday();
+        setDate(todayDate);
       }
 
       // Build DOM
@@ -101,7 +101,7 @@ class datePicker extends HTMLElement {
 
     DOMRender();
 
-    function renderLabels(labelsArray){
+    function renderDaysOfWeek(labelsArray){
       for (let label in labelsArray) {
         let l = document.createElement('div');
         l.className = 'date-picker--day-of-week';
@@ -109,7 +109,7 @@ class datePicker extends HTMLElement {
         elementRef.labels.appendChild(l);
       }
     }
-    renderLabels(labels.days);
+    renderDaysOfWeek(labels.daysOfWeek);
 
     function renderCalendar(daysArray){
       elementRef.calendar.innerHTML = ''; // reset calendar
@@ -117,11 +117,12 @@ class datePicker extends HTMLElement {
         let d = document.createElement('div');
         d.className = 'date-picker--day';
         d.innerText = daysArray[day].daytitle;
+
         d.onclick = function(){
-          console.log(daysArray[day]);
-          pickDate(daysArray[day].value);
+          setDate(daysArray[day].dateObj);
         };
 
+        // add classnames based on expressions
         if (daysArray[day].isNotInMonth) d.className += ' date-picker--edge-day';
         if (daysArray[day].isSelected) d.className += ' date-picker--selected';
         if (daysArray[day].isToday) d.className += ' date-picker--day-today';
@@ -132,87 +133,70 @@ class datePicker extends HTMLElement {
     }
     renderCalendar(daysObject());
   
-    function formatNumber(number){
-      if (number < 10) {
-        return '0' + number;
-      }
-      return number;
-    }
-  
-    function formatDate(date){
-      let d = new Date(date);
-      return d.getFullYear() + '-' + formatNumber(d.getMonth() + 1) + '-' + formatNumber(d.getDate());
-    }
-  
-    function pickDate(date){
-      setDate(date);
-      renderCalendar(daysObject());
-    }
-  
     function setDate(date){
-      elementRef.currentDate = new Date(date);
+      currentDate = date;
+      refresh();
     }
   
-    function showMonth(){
-      return labels.months[elementRef.currentDate.getMonth()];
+    function currentMonth(){
+      return labels.months[currentDate.getMonth()];
     }
   
-    function showYear(){
-      return elementRef.currentDate.getFullYear();
-    }
-  
-    function setToday(){
-      pickDate(new Date());
+    function currentYear(){
+      return currentDate.getFullYear();
     }
   
     function beforeEndDate(val){
       if (elementRef.startDate) {
-        return formatDate(val) >= formatDate(elementRef.startDate);
+        return val.getTime() >= new Date(elementRef.startDate).getTime();
       }
       return true;
     }
   
     function afterStartDate(val){
       if (elementRef.endDate) {
-        return formatDate(val) >= formatDate(elementRef.endDate);
+        return val.getTime() >= new Date(elementRef.endDate).getTime();
       }
       return true;
     }
   
-    function isSelected(date){
-      return (formatDate(date) === formatDate(elementRef.currentDate));
-    }
-  
     function shiftMonth(val){
-      let date = new Date(elementRef.currentDate);
-      date.setMonth(date.getMonth() + val);
-      elementRef.currentDate = date;
-      elementRef.month.innerText = showMonth();
-      renderCalendar(daysObject());
+      currentDate.setMonth(currentDate.getMonth() + val);
+      refresh();
     }
   
     function daysObject(){
-      let iteration = new Date(elementRef.currentDate);
+      let iteration = new Date(currentDate);
       let days = [];
- 
       iteration.setDate(1); // First of the month
       iteration.setDate((iteration.getDate() - iteration.getDay()) + 1); // Back to monday
   
-      for (var day = 0; day < (6 * 7); ++day) {
-        var obj = {};
-  
-        obj.daytitle = iteration.getDate();
-        obj.isSelected = isSelected(iteration);
-        obj.isNotInMonth = iteration.getMonth() !== elementRef.currentDate.getMonth();
-        obj.isToday = formatDate(iteration) === formatDate(new Date());
-        obj.value = formatDate(iteration);
-        obj.isSelectable = beforeEndDate() && afterStartDate();
+      for (let day = 0; day < (6 * 7); ++day) {
+        let obj = {};
+        let i = new Date(iteration);
+
+        obj.daytitle = i.getDate();
+        obj.isSelected = i.getTime() === currentDate.getTime();
+        obj.isNotInMonth = i.getMonth() !== currentDate.getMonth();
+        obj.isToday = i.getTime() == todayDate.getTime();
+        obj.dateObj = i;
+        obj.isSelectable = beforeEndDate(i) && afterStartDate(i);
   
         days.push(obj);
-        iteration.setDate(obj.daytitle + 1);
+        iteration.setDate(i.getDate() + 1);
       }
-
       return days;
+    }
+
+    function parseDate(date) {
+      // for debugging purpose
+      console.log(date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear());
+    }
+
+    function refresh() {
+      elementRef.month.innerText = currentMonth();
+      elementRef.year.innerText = currentYear();
+      renderCalendar(daysObject());
     }
   }
 
