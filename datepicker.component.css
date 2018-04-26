@@ -116,16 +116,17 @@
   position: relative;
   font-size: 13px;
   padding: 0.75rem 0;
-  color: purple;
+  color: lavender;
   cursor: default;
 }
 
 .date-picker--selectable {
   cursor: pointer;
+  color: hotpink;
 }
 
 .date-picker--edge-day {
-  color: grey;
+  color: lavender;
 }
 
 .date-picker--today:hover,
@@ -135,16 +136,18 @@
 .date-picker--close:focus,
 .date-picker--clear:focus,
 .date-picker--day:hover {
-  background: purple;
-  color: white;
+  -moz-box-shadow:    inset 0 0 0 1px purple;
+  -webkit-box-shadow: inset 0 0 0 1px purple;
+  box-shadow:         inset 0 0 0 1px purple;
 }
 
 .date-picker--today:active,
 .date-picker--close:active,
 .date-picker--clear:active,
 .date-picker--selected {
-  background: purple;
-  color: white;
+  -moz-box-shadow:    inset 0 0 2px 1px hotpink;
+  -webkit-box-shadow: inset 0 0 2px 1px hotpink;
+  box-shadow:         inset 0 0 2px 1px hotpink;
 }
 
 .date-picker--day-of-week {
@@ -172,7 +175,7 @@
   content: '';
   height: 0;
   width: 0;
-  border: 7px solid green;
+  border: 7px solid hotpink;
   border-bottom-color: transparent;
   border-left-color: transparent;
   position: absolute;

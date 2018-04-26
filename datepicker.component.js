@@ -17,8 +17,8 @@ class datePicker extends HTMLElement {
       daysOfWeek: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za','Zo'],
       months: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']
     }
-    elementRef.startDate = elementRef.getAttribute('min-date') || null;
-    elementRef.endDate = elementRef.getAttribute('max-date') || null;
+    elementRef.startDateAttr = elementRef.getAttribute('min-date') || null;
+    elementRef.endDateAttr = elementRef.getAttribute('max-date') || null;
 
     let shadowRef = this.attachShadow({mode: 'open'});
     
@@ -147,15 +147,15 @@ class datePicker extends HTMLElement {
     }
   
     function beforeEndDate(val){
-      if (elementRef.startDate) {
-        return val.getTime() >= new Date(elementRef.startDate).getTime();
+      if (elementRef.startDateAttr) {
+        return val.getTime() >= new Date(elementRef.startDateAttr).getTime();
       }
       return true;
     }
   
     function afterStartDate(val){
-      if (elementRef.endDate) {
-        return val.getTime() >= new Date(elementRef.endDate).getTime();
+      if (elementRef.endDateAttr) {
+        return val.getTime() >= new Date(elementRef.endDateAttr).getTime();
       }
       return true;
     }
