@@ -72,9 +72,9 @@ class datePicker extends HTMLElement {
       _DOM.footer = document.createElement('div');
       _DOM.footer.className = 'date-picker--footer';
 
-      _DOM.btnToday = document.createElement('div');
-      _DOM.btnToday.className = 'date-picker--today';
-      _DOM.btnToday.innerText = 'vandaag';
+      _DOM.btnToday = document.createElement('span');
+      _DOM.btnToday.className = 'reset';
+      _DOM.btnToday.innerText = 'reset';
       _DOM.btnToday.onclick = function(){
         setDate(todayDate);
       }
