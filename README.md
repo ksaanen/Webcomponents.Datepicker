@@ -2,8 +2,8 @@
 Datepicker made for webcomponents browser API.
 
 ## Supported attributes:
-`name="mydatepicker"`: set the name for this element that wil be used in the form POST/GET, if no name is set it'll use "datepicker" as default.
-`from="YYYY/MM/DD"`: defines a start date from where days are selectable (format = "YYYY/MM/DD")
+`name="mydatepicker"`: set the name for this element that wil be used in the form POST/GET, if no name is set it'll use "datepicker" as default.  
+`from="YYYY/MM/DD"`: defines a start date from where days are selectable (format = "YYYY/MM/DD")  
 `till="YYYY/MM/DD"`: defines an end date till where days are selectable (format = "YYYY/MM/DD")
 
 ## Browsers support
