@@ -3,6 +3,9 @@
   position: absolute;
   z-index: 9999;
   width: 300px;
+  border: 1px solid #CCC;
+  box-shadow: 3px 3px 0 0 #EFEFEF;
+  padding: 10px;
 }
 
 .date-picker {
