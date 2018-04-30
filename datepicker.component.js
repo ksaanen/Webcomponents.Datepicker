@@ -17,8 +17,10 @@ class datePicker extends HTMLElement {
       daysOfWeek: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za','Zo'],
       months: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']
     }
-    elementRef.startDateAttr = elementRef.getAttribute('min-date') || null;
-    elementRef.endDateAttr = elementRef.getAttribute('max-date') || null;
+
+    // Read element attributes
+    elementRef.from = elementRef.getAttribute('from') || null;
+    elementRef.till = elementRef.getAttribute('till') || null;
     elementRef.name = elementRef.getAttribute('name') || 'datepicker';
 
     let shadowRef = this.attachShadow({mode: 'open'});
@@ -138,13 +140,16 @@ class datePicker extends HTMLElement {
     renderCalendar(daysObject());
   
     function setDate(date){
-      currentDate = date;
-      setInput(date);
-      refresh();
+      if (isSelectable(date)) {
+        currentDate = date;
+        setInput(date);
+        refresh();
+      }
+      return false;
     }
 
     function setInput(date){
-      elementRef._input.value = parseDate(date);
+      elementRef._input.value = parseDateToString(date);
     }
   
     function currentMonth(){
@@ -155,25 +160,30 @@ class datePicker extends HTMLElement {
       return currentDate.getFullYear();
     }
   
-    function beforeEndDate(val){
-      if (elementRef.startDateAttr) {
-        return val.getTime() >= new Date(elementRef.startDateAttr).getTime();
+    function isBeforeEndDate(date){
+      if (elementRef.till) {
+        let endDate = convertStringToDate(elementRef.till)
+        return date.getTime() <= endDate.getTime();
       }
       return true;
     }
   
-    function afterStartDate(val){
-      if (elementRef.endDateAttr) {
-        return val.getTime() >= new Date(elementRef.endDateAttr).getTime();
+    function isAfterStartDate(date){
+      if (elementRef.from) {
+        return date.getTime() >= new Date(elementRef.from).getTime();
       }
       return true;
+    }
+
+    function isSelectable(date) {
+      return isBeforeEndDate(date) && isAfterStartDate(date);
     }
   
     function shiftMonth(val){
       currentDate.setMonth(currentDate.getMonth() + val);
       refresh();
     }
-  
+
     function daysObject(){
       let iteration = new Date(currentDate);
       let days = [];
@@ -189,16 +199,28 @@ class datePicker extends HTMLElement {
         obj.isNotInMonth = i.getMonth() !== currentDate.getMonth();
         obj.isToday = i.getTime() == todayDate.getTime();
         obj.dateObj = i;
-        obj.isSelectable = beforeEndDate(i) && afterStartDate(i);
-  
+        obj.isSelectable = isSelectable(i);
+
         days.push(obj);
         iteration.setDate(i.getDate() + 1);
       }
       return days;
     }
 
-    function parseDate(date) {
+    function parseDateToString(date) {
       return (date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate());
+    }
+
+    // Expects "YYYY/MM/DD" as input
+    function convertStringToDate(string) {
+      console.log(string);
+      let d = new Date();
+      let s = string.split('/');
+      d.setFullYear(Number(s[0]));
+      d.setMonth(Number(s[1]));
+      d.setDate(Number(s[2]));
+
+      return d;
     }
 
     function refresh() {
