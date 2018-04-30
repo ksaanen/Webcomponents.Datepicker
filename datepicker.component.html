@@ -8,10 +8,24 @@
 
   <!-- polyfills https://github.com/webcomponents/webcomponentsjs -->
   <script src="src/polyfills/webcomponents-sd-ce.js"></script>
+
+  <!-- styling not related to date-picker -->
+  <style type="text/css">
+    label {
+      display: block;
+      clear: both;
+    }
+  </style>
 </head>
 <body>
 
-  <date-picker></date-picker>
+  <form action="" method="POST">
+    <label>
+      Pick a date<br />
+      <date-picker name="mydate"></date-picker>
+    </label>
+    <button type="submit">submit</button>
+  </form>
 
   <script src="datepicker.component.js" min-date="new Date()"></script>
 

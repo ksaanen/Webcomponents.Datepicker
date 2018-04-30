@@ -19,6 +19,7 @@ class datePicker extends HTMLElement {
     }
     elementRef.startDateAttr = elementRef.getAttribute('min-date') || null;
     elementRef.endDateAttr = elementRef.getAttribute('max-date') || null;
+    elementRef.name = elementRef.getAttribute('name') || 'datepicker';
 
     let shadowRef = this.attachShadow({mode: 'open'});
     
@@ -27,6 +28,11 @@ class datePicker extends HTMLElement {
 
       _DOM._style = document.createElement('style');
       _DOM._style.textContent = '@import "datepicker.component.css"';
+
+      _DOM._input = document.createElement('input');
+      _DOM._input.type = 'text';
+      _DOM._input.name = elementRef.name;
+      _DOM._input.setAttribute("hidden", true);
 
       _DOM.wrapper = document.createElement('div');
       _DOM.wrapper.className ='date-picker--wrapper';
@@ -81,20 +87,18 @@ class datePicker extends HTMLElement {
 
       // Build DOM
       shadowRef.appendChild(_DOM._style);
+      shadowRef.appendChild(_DOM._input);
       shadowRef.appendChild(_DOM.wrapper);
       _DOM.wrapper.appendChild(_DOM.inner);
       _DOM.inner.appendChild(_DOM.header);
       _DOM.header.appendChild(_DOM.btnPrev);
       _DOM.header.appendChild(_DOM.monthYear);
       _DOM.header.appendChild(_DOM.btnNext);
-
       _DOM.monthYear.appendChild(_DOM.month);
       _DOM.monthYear.appendChild(_DOM.year);
-
       _DOM.inner.appendChild(_DOM.body);
       _DOM.body.appendChild(_DOM.labels);
       _DOM.body.appendChild(_DOM.calendar);
-
       _DOM.inner.appendChild(_DOM.footer);
       _DOM.footer.appendChild(_DOM.btnToday);
     }
@@ -135,7 +139,12 @@ class datePicker extends HTMLElement {
   
     function setDate(date){
       currentDate = date;
+      setInput(date);
       refresh();
+    }
+
+    function setInput(date){
+      elementRef._input.value = parseDate(date);
     }
   
     function currentMonth(){
@@ -189,8 +198,7 @@ class datePicker extends HTMLElement {
     }
 
     function parseDate(date) {
-      // for debugging purpose
-      console.log(date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear());
+      return (date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate());
     }
 
     function refresh() {
