@@ -213,7 +213,6 @@ class datePicker extends HTMLElement {
 
     // Expects "YYYY/MM/DD" as input
     function convertStringToDate(string) {
-      console.log(string);
       let d = new Date();
       let s = string.split('/');
       d.setFullYear(Number(s[0]));
