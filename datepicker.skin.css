@@ -1,0 +1,89 @@
+.date-picker--component {
+  font-family: Arial;
+  width: 300px;
+  border: 1px solid #CCC;
+  box-shadow: 3px 3px 0 0 #EFEFEF;
+  padding: 10px;
+  background: white;
+}
+
+.date-picker--header {
+  padding: 0 12px;
+}
+
+.date-picker--month-year {
+  font-size: 13px;
+  font-weight: 300;
+  text-align: center;
+}
+
+.date-picker--prev,
+.date-picker--next {
+  outline: none;
+  padding-top:5px;
+}
+
+
+
+.date-picker--prev:focus:after,
+.date-picker--next:focus:after,
+.date-picker--prev:hover:after,
+.date-picker--next:hover:after {
+  border-color: black;
+}
+
+
+.date-picker--prev:hover,
+.date-picker--next:hover {
+  cursor: pointer;
+}
+
+.date-picker--body,
+.date-picker--footer {
+  text-align: center;
+}
+
+.date-picker--day-of-week,
+.date-picker--day {
+  text-align: center;
+  line-height: 1em;
+  background: transparent;
+  border-radius: 3px;
+  border:2px solid transparent;
+}
+
+.date-picker--day {
+  font-size: 13px;
+  color: lavender;
+  cursor: default;
+}
+
+.date-picker--day:hover {
+  border:2px dashed hotpink;
+}
+
+.date-picker--selectable {
+  cursor: pointer;
+  color: hotpink;
+}
+
+.date-picker--edge-day {
+  color: lavender;
+}
+
+
+.date-picker--selected {
+  border:2px solid hotpink !important;
+}
+
+.date-picker--day-of-week {
+  text-transform: uppercase;
+  font-size: 13px;
+  opacity: 0.5;
+}
+
+.reset {
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 15px;
+}

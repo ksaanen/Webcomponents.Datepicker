@@ -29,7 +29,45 @@ class datePicker extends HTMLElement {
       let _DOM = elementRef;
 
       _DOM._style = document.createElement('style');
-      _DOM._style.textContent = '@import "datepicker.component.css"';
+      _DOM._style.textContent = `
+        /* GENERAL */
+        [hidden] {
+          display: none;
+        }
+
+        /* LAYOUT */
+        .date-picker--header {
+          display:grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-rows: 1fr;
+        }
+        .date-picker--labels {
+          display:grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+          grid-template-rows: 1fr;
+        }
+        .date-picker--calendar {
+          display:grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+          grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        }
+
+        /* ALIGNMENT */
+        .date-picker--prev {text-align: left}
+        .date-picker--next {text-align: right}
+        .date-picker--day {position: relative;}
+        .date-picker--today:after {
+          content: ''; height: 0; width: 0; top: 0; right: 0;
+          border: 7px solid hotpink;
+          border-color: hotpink hotpink transparent transparent;
+          display: block;
+          position: absolute;
+          }
+        .reset { text-decoration: underline; cursor: pointer;}
+
+        /* COLOR */
+
+      `;
 
       _DOM._input = document.createElement('input');
       _DOM._input.type = 'text';
@@ -37,22 +75,21 @@ class datePicker extends HTMLElement {
       _DOM._input.setAttribute("hidden", true);
 
       _DOM.wrapper = document.createElement('div');
-      _DOM.wrapper.className ='date-picker--wrapper';
-
-      _DOM.inner = document.createElement('div');
-      _DOM.inner.className = 'date-picker--inner';
+      _DOM.wrapper.className ='date-picker--component';
 
       _DOM.header = document.createElement('div');
       _DOM.header.className = 'date-picker--header';
 
       _DOM.btnPrev = document.createElement('div');
       _DOM.btnPrev.className = 'date-picker--prev';
+      _DOM.btnPrev.innerText = '<';
       _DOM.btnPrev.onclick = function(){
         shiftMonth(-1);
       }
 
       _DOM.btnNext = document.createElement('div');
       _DOM.btnNext.className = 'date-picker--next';
+      _DOM.btnNext.innerText = '>';
       _DOM.btnNext.onclick = function(){
         shiftMonth(1);
       }
@@ -91,17 +128,16 @@ class datePicker extends HTMLElement {
       shadowRef.appendChild(_DOM._style);
       shadowRef.appendChild(_DOM._input);
       shadowRef.appendChild(_DOM.wrapper);
-      _DOM.wrapper.appendChild(_DOM.inner);
-      _DOM.inner.appendChild(_DOM.header);
+      _DOM.wrapper.appendChild(_DOM.header);
       _DOM.header.appendChild(_DOM.btnPrev);
       _DOM.header.appendChild(_DOM.monthYear);
       _DOM.header.appendChild(_DOM.btnNext);
       _DOM.monthYear.appendChild(_DOM.month);
       _DOM.monthYear.appendChild(_DOM.year);
-      _DOM.inner.appendChild(_DOM.body);
+      _DOM.wrapper.appendChild(_DOM.body);
       _DOM.body.appendChild(_DOM.labels);
       _DOM.body.appendChild(_DOM.calendar);
-      _DOM.inner.appendChild(_DOM.footer);
+      _DOM.wrapper.appendChild(_DOM.footer);
       _DOM.footer.appendChild(_DOM.btnToday);
     }
 
@@ -131,7 +167,7 @@ class datePicker extends HTMLElement {
         // add classnames based on expressions
         if (daysArray[day].isNotInMonth) d.className += ' date-picker--edge-day';
         if (daysArray[day].isSelected) d.className += ' date-picker--selected';
-        if (daysArray[day].isToday) d.className += ' date-picker--day-today';
+        if (daysArray[day].isToday) d.className += ' date-picker--today';
         if (daysArray[day].isSelectable) d.className += ' date-picker--selectable';
 
         elementRef.calendar.appendChild(d);
