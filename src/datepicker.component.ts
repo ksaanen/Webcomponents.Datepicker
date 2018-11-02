@@ -85,7 +85,7 @@ class datePicker extends HTMLElement {
         btnToday: document.createElement('span')
       };
 
-      datepicker.style.textContent = '@import "datepicker.component.css"';
+      datepicker.style.textContent = '@import "dist/datepicker.component.css"';
 
       datepicker.input.type = 'text';
       datepicker.input.name = self.getAttribute('name') || 'datepicker';

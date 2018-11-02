@@ -29,7 +29,7 @@ class datePicker extends HTMLElement {
                 footer: document.createElement('div'),
                 btnToday: document.createElement('span')
             };
-            datepicker.style.textContent = '@import "datepicker.component.css"';
+            datepicker.style.textContent = '@import "dist/datepicker.component.css"';
             datepicker.input.type = 'text';
             datepicker.input.name = self.getAttribute('name') || 'datepicker';
             datepicker.input.setAttribute("hidden", "true");
