@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc -w",
-    "build": "tsc -b"
+    "start:sass": "node-sass -w ./src/datepicker.component.scss ./dist/datepicker.component.css",
+    "build": "tsc -b",
+    "build:sass": "node-sass ./src/datepicker.component.scss ./dist/datepicker.component.css --output-style compressed"
   },
   "repository": {
     "type": "git",
@@ -16,7 +18,8 @@
     "datepicker",
     "date",
     "typescript",
-    "webcomponent"
+    "webcomponent",
+    "sass"
   ],
   "author": "Kevin Saanen",
   "license": "MIT",
@@ -25,6 +28,7 @@
   },
   "homepage": "https://github.com/ksaanen/Webcomponents.Datepicker#readme",
   "dependencies": {
+    "node-sass": "^4.9.4",
     "typescript": "^3.1.6"
   }
 }
