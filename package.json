@@ -5,10 +5,11 @@
   "main": "datepicker.component.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc -w",
-    "start:sass": "node-sass -w ./src/datepicker.component.scss ./dist/datepicker.component.css",
-    "build": "tsc -b",
-    "build:sass": "node-sass ./src/datepicker.component.scss ./dist/datepicker.component.css --output-style compressed"
+    "start:sass": "node-sass -w ./src/datepicker.component.scss -o ./dist/",
+    "start:ts": "tsc -w",
+    "build:sass": "node-sass ./src/datepicker.component.scss -o ./dist/ --output-style compressed",
+    "build:ts": "tsc -b",
+    "build": "npm run build:ts && npm run build:sass"
   },
   "repository": {
     "type": "git",

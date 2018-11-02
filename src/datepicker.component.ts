@@ -1,52 +1,6 @@
 'use strict';
 
-interface datepickerDOM {
-  style: HTMLStyleElement;
-  input: HTMLInputElement;
-  wrapper: HTMLElement;
-  inner: HTMLElement;
-  header: HTMLElement;
-
-  btnPrev: HTMLElement;
-  btnNext: HTMLElement;
-  btnToday: HTMLElement;
-
-  monthYear: HTMLElement;
-  month: HTMLElement;
-  year: HTMLElement;
-
-  body: HTMLElement;
-  labels: HTMLElement;
-  calendar: HTMLElement;
-  footer: HTMLElement;
-}
-
-interface dayObject {
-  daytitle: string;
-  isSelected: boolean;
-  isNotInMonth: boolean;
-  isToday: boolean;
-  dateObj: Date;
-  isSelectable: boolean;
-}
-
-interface daysObject {
-  days: dayObject[];
-  iteration: number;
-}
-
-interface labels {
-  daysOfWeek: string[];
-  months: string[];
-}
-
-interface datepickerElementRef extends HTMLElement {
-  name: string,
-  
-  // optional attributes
-  from?: string,
-  till?: string
-}
+import {datepickerDOM, dayObject, daysObject, labels, datepickerElementRef} from './datepicker.interface';
 
 class datePicker extends HTMLElement {
 
