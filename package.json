@@ -1,0 +1,30 @@
+{
+  "name": "webcomponents.datepicker",
+  "version": "0.7.0",
+  "description": "custom date picker",
+  "main": "datepicker.component.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc -w",
+    "build": "tsc -b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ksaanen/Webcomponents.Datepicker.git"
+  },
+  "keywords": [
+    "datepicker",
+    "date",
+    "typescript",
+    "webcomponent"
+  ],
+  "author": "Kevin Saanen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ksaanen/Webcomponents.Datepicker/issues"
+  },
+  "homepage": "https://github.com/ksaanen/Webcomponents.Datepicker#readme",
+  "dependencies": {
+    "typescript": "^3.1.6"
+  }
+}
