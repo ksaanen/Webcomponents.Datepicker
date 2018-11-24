@@ -4,6 +4,7 @@ export interface datepickerDOM {
   wrapper: HTMLElement;
   inner: HTMLElement;
   header: HTMLElement;
+  value: string;
 
   btnPrev: HTMLElement;
   btnNext: HTMLElement;
@@ -19,6 +20,26 @@ export interface datepickerDOM {
   footer: HTMLElement;
 }
 
+export enum Months {
+  januari = 0,
+  februari,
+  maart,
+  april,
+  mei,
+  juni,
+  juli,
+  augustus,
+  september,
+  oktober,
+  november,
+  december
+}
+
+export interface Appointment {
+  date: Date | string,
+  isFull: boolean
+}
+
 export interface dayObject {
   daytitle: string;
   isSelected: boolean;
@@ -26,6 +47,9 @@ export interface dayObject {
   isToday: boolean;
   dateObj: Date;
   isSelectable: boolean;
+
+  hasAppointment: boolean;
+  isFull: boolean;
 }
 
 export interface daysObject {

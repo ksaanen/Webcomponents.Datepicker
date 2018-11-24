@@ -164,3 +164,11 @@
   cursor: pointer;
   font-size: 15px;
 }
+
+// Statuses
+.date-picker--appointment {
+  background-color: orange;
+}
+.date-picker--full {
+  background-color: red !important;
+}

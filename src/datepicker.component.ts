@@ -1,6 +1,6 @@
 'use strict';
 
-import {datepickerDOM, dayObject, daysObject, labels, datepickerElementRef} from './datepicker.interface';
+import {datepickerDOM, dayObject, daysObject, labels, datepickerElementRef, Appointment} from './datepicker.interface';
 
 class datePicker extends HTMLElement {
 
@@ -19,6 +19,7 @@ class datePicker extends HTMLElement {
 
     let shadowRef = self.attachShadow({mode: 'open'});
     let datepicker: datepickerDOM;
+    let appointments: Appointment[] = JSON.parse(self.getAttribute('appointments'));
     
     function DOMRender(){
       datepicker = {
@@ -36,7 +37,8 @@ class datePicker extends HTMLElement {
         labels: document.createElement('div'),
         calendar: document.createElement('div'),
         footer: document.createElement('div'),
-        btnToday: document.createElement('span')
+        btnToday: document.createElement('span'),
+        value: ''
       };
 
       datepicker.style.textContent = '@import "dist/datepicker.component.css"';
@@ -128,6 +130,8 @@ class datePicker extends HTMLElement {
         if (daysArray[day].isSelected) d.className += ' date-picker--selected';
         if (daysArray[day].isToday) d.className += ' date-picker--day-today';
         if (daysArray[day].isSelectable) d.className += ' date-picker--selectable';
+        if (daysArray[day].hasAppointment) d.className += ' date-picker--appointment';
+        if (daysArray[day].isFull) d.className += ' date-picker--full';
 
         datepicker.calendar.appendChild(d);
       }
@@ -172,12 +176,34 @@ class datePicker extends HTMLElement {
     }
 
     function isSelectable(date: Date): boolean {
-      return isBeforeEndDate(date) && isAfterStartDate(date);
+      return isBeforeEndDate(date) && isAfterStartDate(date) && !isFull(date);
     }
   
     function shiftMonth(val: number): void {
       currentDate.setMonth(currentDate.getMonth() + val);
       refresh();
+    }
+
+    function hasAppointment(date: Date): boolean {
+      let _date = parseDateToString(date);
+      let _a = appointments.map(function(e){
+        return e.date;
+      }).indexOf(_date);
+
+      return _a !== -1;
+    }
+
+    function isFull(date: Date): boolean {
+      let _date = parseDateToString(date);
+      let _a = appointments.map(function(e){
+        return e.date;
+      }).indexOf(_date);
+
+      if (_a !== -1) {
+        return appointments[_a].isFull;
+      }
+
+      return false;
     }
 
     function daysObject(): dayObject[] {
@@ -196,6 +222,8 @@ class datePicker extends HTMLElement {
           isNotInMonth: i.getMonth() !== currentDate.getMonth(),
           isToday: i.getTime() == todayDate.getTime(),
           dateObj: i,
+          hasAppointment: hasAppointment(i),
+          isFull: isFull(i), // Only loop trough data again if data has appointment
           isSelectable: isSelectable(i)
         };
 

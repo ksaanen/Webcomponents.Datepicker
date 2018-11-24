@@ -11,6 +11,7 @@ class datePicker extends HTMLElement {
         };
         let shadowRef = self.attachShadow({ mode: 'open' });
         let datepicker;
+        let appointments = JSON.parse(self.getAttribute('appointments'));
         function DOMRender() {
             datepicker = {
                 style: document.createElement('style'),
@@ -27,7 +28,8 @@ class datePicker extends HTMLElement {
                 labels: document.createElement('div'),
                 calendar: document.createElement('div'),
                 footer: document.createElement('div'),
-                btnToday: document.createElement('span')
+                btnToday: document.createElement('span'),
+                value: ''
             };
             datepicker.style.textContent = '@import "dist/datepicker.component.css"';
             datepicker.input.type = 'text';
@@ -101,6 +103,10 @@ class datePicker extends HTMLElement {
                     d.className += ' date-picker--day-today';
                 if (daysArray[day].isSelectable)
                     d.className += ' date-picker--selectable';
+                if (daysArray[day].hasAppointment)
+                    d.className += ' date-picker--appointment';
+                if (daysArray[day].isFull)
+                    d.className += ' date-picker--full';
                 datepicker.calendar.appendChild(d);
             }
         }
@@ -137,11 +143,28 @@ class datePicker extends HTMLElement {
             return true;
         }
         function isSelectable(date) {
-            return isBeforeEndDate(date) && isAfterStartDate(date);
+            return isBeforeEndDate(date) && isAfterStartDate(date) && !isFull(date);
         }
         function shiftMonth(val) {
             currentDate.setMonth(currentDate.getMonth() + val);
             refresh();
+        }
+        function hasAppointment(date) {
+            let _date = parseDateToString(date);
+            let _a = appointments.map(function (e) {
+                return e.date;
+            }).indexOf(_date);
+            return _a !== -1;
+        }
+        function isFull(date) {
+            let _date = parseDateToString(date);
+            let _a = appointments.map(function (e) {
+                return e.date;
+            }).indexOf(_date);
+            if (_a !== -1) {
+                return appointments[_a].isFull;
+            }
+            return false;
         }
         function daysObject() {
             let iteration = new Date(currentDate);
@@ -156,6 +179,8 @@ class datePicker extends HTMLElement {
                     isNotInMonth: i.getMonth() !== currentDate.getMonth(),
                     isToday: i.getTime() == todayDate.getTime(),
                     dateObj: i,
+                    hasAppointment: hasAppointment(i),
+                    isFull: isFull(i),
                     isSelectable: isSelectable(i)
                 };
                 days.push(obj);
