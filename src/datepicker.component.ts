@@ -19,7 +19,7 @@ class datePicker extends HTMLElement {
 
     let shadowRef = self.attachShadow({mode: 'open'});
     let datepicker: datepickerDOM;
-    let appointments: Appointment[] = JSON.parse(self.getAttribute('appointments'));
+    let appointments: Appointment[] = JSON.parse(self.getAttribute('appointments')) || [];
     
     function DOMRender(){
       datepicker = {
