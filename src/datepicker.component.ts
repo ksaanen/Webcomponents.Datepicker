@@ -8,9 +8,6 @@ class datePicker extends HTMLElement {
     super();
 
     let self = this;
-    self.value = '';
-    self.name = '';
-    self.name = 'text';
     
     let currentDate: Date = new Date();
     const todayDate: Date = new Date();
