@@ -1,10 +1,8 @@
 export interface datepickerDOM {
   style: HTMLStyleElement;
-  input: HTMLInputElement;
   wrapper: HTMLElement;
   inner: HTMLElement;
   header: HTMLElement;
-  value: string;
 
   btnPrev: HTMLElement;
   btnNext: HTMLElement;
@@ -64,6 +62,7 @@ export interface labels {
 
 export interface datepickerElementRef extends HTMLElement {
   name: string,
+  value: string;
   
   // optional attributes
   from?: string,
