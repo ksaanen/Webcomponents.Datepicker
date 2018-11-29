@@ -6,6 +6,7 @@
   <title>Datepicker Webcomponents</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.0.0/webcomponents-bundle.js"></script>
+  <script src="dist/datepicker.replace.js"></script>
 
   <!-- styling not related to date-picker -->
   <style type="text/css">
@@ -20,12 +21,11 @@
   <form action="" method="POST">
     <label>
       Pick a date<br />
-      <date-picker name="mydate" from="2018/10/11" till="2018/11/30" appointments='[{"date": "2018/11/13", "isFull": false}, {"date": "2018/11/14", "isFull": true}]'></date-picker>
+      <input name="datum" type="hidden" />
+      <script>datePicker('[name="datum"]');</script>
     </label>
     <button type="submit">submit</button>
   </form>
-
-  <script src="dist/datepicker.component.js"></script>
 
 </body>
 </html>
