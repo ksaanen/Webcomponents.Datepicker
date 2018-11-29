@@ -1,10 +1,14 @@
 'use strict';
 
-import {datepickerDOM, dayObject, daysObject, labels, datepickerElementRef, Appointment} from './datepicker.interface';
+import {datepickerDOM, dayObject, labels, Appointment} from './datepicker.interface';
 
 class datePicker extends HTMLElement {
 
-  constructor() {
+  static get observedAttributes() {
+    return ['name', 'value', 'from', 'till']; 
+  }
+
+  constructor(public _value: string) {
     super();
 
     let self = this;
@@ -23,6 +27,7 @@ class datePicker extends HTMLElement {
     
     function DOMRender(){
       datepicker = {
+        input: document.createElement('input'),
         style: document.createElement('style'),
         wrapper: document.createElement('div'),
         inner: document.createElement('div'),
@@ -38,6 +43,10 @@ class datePicker extends HTMLElement {
         footer: document.createElement('div'),
         btnToday: document.createElement('span')
       };
+
+      datepicker.input.type = 'hidden';
+      datepicker.input.name = self.getAttribute('name');
+      datepicker.input.value = _value;
 
       datepicker.style.textContent = '@import "dist/datepicker.component.css"';
 
@@ -79,6 +88,7 @@ class datePicker extends HTMLElement {
       }
 
       // Build DOM
+      shadowRef.appendChild(datepicker.input);
       shadowRef.appendChild(datepicker.style);
       shadowRef.appendChild(datepicker.wrapper);
       datepicker.wrapper.appendChild(datepicker.inner);
@@ -249,34 +259,16 @@ class datePicker extends HTMLElement {
   }
 
   connectedCallback(): void {
-    // Initialize properties
+    // Pass attribute values
     this.value = this.getAttribute('value') || this.value;
-    this.name = this.getAttribute('name') || this.name;
-    this.type = this.getAttribute('type') || this.type;
   }
 
   get value(): string {
-    return this.getAttribute('value');
+    return this._value;
   }
   
   set value(newValue: string) {
-    this.setAttribute('value', newValue);
-  }
-
-  get type(): string {
-    return this.getAttribute('type');
-  }
-
-  set type(newValue: string) {
-    this.setAttribute('type', newValue);
-  }
-  
-  get name(): string {
-    return this.getAttribute('name');
-  }
-
-  set name(newValue: string) {
-    this.setAttribute('name', newValue);
+    this._value = newValue;
   }
 
 }

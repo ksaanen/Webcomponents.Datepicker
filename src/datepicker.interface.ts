@@ -1,4 +1,5 @@
 export interface datepickerDOM {
+  input: HTMLInputElement;
   style: HTMLStyleElement;
   wrapper: HTMLElement;
   inner: HTMLElement;
