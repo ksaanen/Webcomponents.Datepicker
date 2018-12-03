@@ -231,7 +231,7 @@ function datePicker(elementRef: string) {
   }
 
   function parseDateToString(date: Date): string {
-    return (date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate());
+    return (date.getFullYear()+'/'+(date.getMonth()+1)+'/'+date.getDate());
   }
 
   // Expects "YYYY/MM/DD" as input
