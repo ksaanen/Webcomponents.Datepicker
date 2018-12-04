@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.0.0/webcomponents-bundle.js"></script>
   <script src="dist/datepicker.replace.js"></script>
+  <script src="dist/availability.js"></script>
 
   <!-- styling not related to date-picker -->
   <style type="text/css">
@@ -22,7 +23,20 @@
     <label>
       Pick a date<br />
       <input name="datum" type="hidden" />
-      <script>datePicker('[name="datum"]');</script>
+      <script>
+        let data = {
+          set1: [{"id":"1","dag":"0","is_open":"0","open_van":"09:00:00","open_tot":"18:00:00","personeel_ochtend":"0","personeel_middag":"0","personeel_avond":"0"},{"id":"2","dag":"1","is_open":"0","open_van":"09:00:00","open_tot":"18:00:00","personeel_ochtend":"2","personeel_middag":"2","personeel_avond":"2"},{"id":"3","dag":"2","is_open":"0","open_van":"09:00:00","open_tot":"18:00:00","personeel_ochtend":"2","personeel_middag":"2","personeel_avond":"2"},{"id":"4","dag":"3","is_open":"1","open_van":"09:00:00","open_tot":"18:00:00","personeel_ochtend":"2","personeel_middag":"2","personeel_avond":"2"},{"id":"5","dag":"4","is_open":"1","open_van":"09:00:00","open_tot":"18:00:00","personeel_ochtend":"2","personeel_middag":"2","personeel_avond":"2"},{"id":"6","dag":"5","is_open":"1","open_van":"09:00:00","open_tot":"18:00:00","personeel_ochtend":"2","personeel_middag":"2","personeel_avond":"2"},{"id":"7","dag":"6","is_open":"1","open_van":"09:00:00","open_tot":"18:00:00","personeel_ochtend":"2","personeel_middag":"2","personeel_avond":"2"}],
+          set2: [{"id":"6","datum":"2018-12-07","is_open":"0","open_van":"00:00:00","open_tot":"00:00:00","personeel_ochtend":"0","personeel_middag":"0","personeel_avond":"0"},{"id":"7","datum":"2018-12-08","is_open":"1","open_van":"00:00:00","open_tot":"00:00:00","personeel_ochtend":"0","personeel_middag":"0","personeel_avond":"0"},{"id":"8","datum":"2018-12-10","is_open":"1","open_van":"00:00:00","open_tot":"00:00:00","personeel_ochtend":"0","personeel_middag":"0","personeel_avond":"0"}],
+          set3: [{"id":"1","aangevraagd":"2018-11-29 22:43:58","datum":"2018-10-30","voornaam":"Voornaam","tussenvoegsel":"","achternaam":"Achternaam","straat":"Straatnaam","huisnummer":"10","huisnummertoevoeging":"0","postcode":"1234 XX","woonplaats":"Woonplaats","telefoonnummer":"0612345678","email":"test@test.nl","trouwdatum":"2018-10-25","confectiemaat":"60","lengte":"180","stijl":"","personen":"3","hightea":"1","bericht":"","dagdeel":"ochtend"},{"id":"2","aangevraagd":"2018-12-01 22:19:35","datum":"2019-00-05","voornaam":"TEST","tussenvoegsel":"","achternaam":"TEST","straat":"TEST","huisnummer":"12","huisnummertoevoeging":"0","postcode":"1234 xx","woonplaats":"TEST","telefoonnummer":"0612345678","email":"bla@bla.nl","trouwdatum":"0000-00-00","confectiemaat":"60","lengte":"180","stijl":"","personen":"4","hightea":"0","bericht":"nee","dagdeel":"ochtend"},{"id":"3","aangevraagd":"2018-12-03 22:27:25","datum":"2018-12-30","voornaam":"test","tussenvoegsel":"","achternaam":"test","straat":"test","huisnummer":"12","huisnummertoevoeging":"0","postcode":"1222 te","woonplaats":"test","telefoonnummer":"0612345678","email":"test@test.nl","trouwdatum":"0000-00-00","confectiemaat":"60","lengte":"180","stijl":"","personen":"4","hightea":"0","bericht":"nee","dagdeel":"ochtend"},{"id":"4","aangevraagd":"2018-12-03 22:50:35","datum":"2018-12-29","voornaam":"test 2","tussenvoegsel":"","achternaam":"test 2","straat":"test 2","huisnummer":"11","huisnummertoevoeging":"0","postcode":"1222 XX","woonplaats":"test 2","telefoonnummer":"0612345678","email":"test@test.nl","trouwdatum":"0000-00-00","confectiemaat":"60","lengte":"180","stijl":"","personen":"4","hightea":"0","bericht":"nee","dagdeel":"ochtend"}]
+        }
+
+        datePicker({
+          ref: '[name="datum"]',
+          from: new Date(),
+          till: new Date().setFullYear(new Date().getFullYear + 1),
+          beschikbaarheid: availability('2018-12-4', '2019-12-31', data.set1, data.set2, data.set3)
+        });
+      </script>
     </label>
     <button type="submit">submit</button>
   </form>

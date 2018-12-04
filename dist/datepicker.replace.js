@@ -2,8 +2,8 @@
 function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
-function datePicker(elementRef) {
-    let self = document.querySelector(elementRef);
+function datePicker(props) {
+    let self = document.querySelector(props.ref);
     let currentDate = new Date();
     const todayDate = new Date();
     let labels = {
@@ -12,7 +12,7 @@ function datePicker(elementRef) {
     };
     let shadowRef = document.createElement('div');
     let datepicker;
-    let appointments = JSON.parse(self.getAttribute('appointments')) || [];
+    let beschikbaarheidArray = props.beschikbaarheid || [];
     function DOMRender() {
         datepicker = {
             input: document.createElement('input'),
@@ -148,18 +148,21 @@ function datePicker(elementRef) {
     }
     function hasAppointment(date) {
         let _date = parseDateToString(date);
-        let _a = appointments.map(function (e) {
-            return e.date;
+        let _a = beschikbaarheidArray.map(function (e) {
+            return parseDateToString(e.datum);
         }).indexOf(_date);
-        return _a !== -1;
+        if (_a !== -1) {
+            return beschikbaarheidArray[_a].hasBookings;
+        }
+        return false;
     }
     function isFull(date) {
         let _date = parseDateToString(date);
-        let _a = appointments.map(function (e) {
-            return e.date;
+        let _a = beschikbaarheidArray.map(function (e) {
+            return parseDateToString(e.datum);
         }).indexOf(_date);
         if (_a !== -1) {
-            return appointments[_a].isFull;
+            return beschikbaarheidArray[_a].isFull;
         }
         return false;
     }
@@ -186,7 +189,7 @@ function datePicker(elementRef) {
         return days;
     }
     function parseDateToString(date) {
-        return (date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate());
+        return (date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate());
     }
     function convertStringToDate(str) {
         let d = new Date();

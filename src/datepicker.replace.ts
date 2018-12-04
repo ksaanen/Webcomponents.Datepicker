@@ -1,14 +1,31 @@
 'use strict';
 
-import {datepickerDOM, dayObject, labels, Appointment} from './datepicker.interface';
+import {datepickerDOM, dayObject, labels} from './datepicker.interface';
 
 function insertAfter(newNode: HTMLElement, referenceNode: HTMLElement) {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-function datePicker(elementRef: string) {
+type propsObject = {
+  ref: string,
+  from: string,
+  till: string,
+  beschikbaarheid: Beschikbaarheid[]
+}
 
-  let self: HTMLInputElement = document.querySelector(elementRef);
+type Beschikbaarheid = {
+  datum: Date,
+  personeel_ochtend: number,
+  personeel_middag: number,
+  personeel_avond: number,
+  isOpen: boolean,
+  isFull: boolean,
+  hasBookings: boolean
+}
+
+function datePicker(props: propsObject) {
+
+  let self: HTMLInputElement = document.querySelector(props.ref);
   
   let currentDate: Date = new Date();
   const todayDate: Date = new Date();
@@ -20,7 +37,7 @@ function datePicker(elementRef: string) {
 
   let shadowRef = document.createElement('div');
   let datepicker: datepickerDOM;
-  let appointments: Appointment[] = JSON.parse(self.getAttribute('appointments')) || [];
+  let beschikbaarheidArray: Beschikbaarheid[] = props.beschikbaarheid || [];
   
   function DOMRender(){
     datepicker = {
@@ -129,6 +146,7 @@ function datePicker(elementRef: string) {
       if (daysArray[day].isSelectable) d.className += ' date-picker--selectable';
       if (daysArray[day].hasAppointment) d.className += ' date-picker--appointment';
       if (daysArray[day].isFull) d.className += ' date-picker--full';
+      //if (daysArray[day].isFull) d.className += ' date-picker--closed';
 
       datepicker.calendar.appendChild(d);
     }
@@ -183,21 +201,25 @@ function datePicker(elementRef: string) {
 
   function hasAppointment(date: Date): boolean {
     let _date = parseDateToString(date);
-    let _a = appointments.map(function(e){
-      return e.date;
+    let _a = beschikbaarheidArray.map(function(e){
+      return parseDateToString(e.datum);
     }).indexOf(_date);
 
-    return _a !== -1;
+    if (_a !== -1) {
+      return beschikbaarheidArray[_a].hasBookings;
+    }
+
+    return false;
   }
 
   function isFull(date: Date): boolean {
     let _date = parseDateToString(date);
-    let _a = appointments.map(function(e){
-      return e.date;
+    let _a = beschikbaarheidArray.map(function(e){
+      return parseDateToString(e.datum);
     }).indexOf(_date);
 
     if (_a !== -1) {
-      return appointments[_a].isFull;
+      return beschikbaarheidArray[_a].isFull;
     }
 
     return false;
