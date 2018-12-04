@@ -214,7 +214,7 @@ function datePicker(props: propsObject) {
     }).indexOf(_date);
 
     if (_a !== -1) {
-      return beschikbaarheidArray[_a].isOpen === false;
+      return Number(beschikbaarheidArray[_a].isOpen) === 0;
     }
 
     return false;

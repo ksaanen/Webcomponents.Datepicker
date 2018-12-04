@@ -174,7 +174,7 @@ function datePicker(props) {
             return parseDateToString(e.datum);
         }).indexOf(_date);
         if (_a !== -1) {
-            return beschikbaarheidArray[_a].isOpen === false;
+            return Number(beschikbaarheidArray[_a].isOpen) === 0;
         }
         return false;
     }
