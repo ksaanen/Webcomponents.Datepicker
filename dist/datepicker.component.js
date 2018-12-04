@@ -181,7 +181,8 @@ class datePicker extends HTMLElement {
                     dateObj: i,
                     hasAppointment: hasAppointment(i),
                     isFull: isFull(i),
-                    isSelectable: isSelectable(i)
+                    isSelectable: isSelectable(i),
+                    isClosed: false
                 };
                 days.push(obj);
                 iteration.setDate(i.getDate() + 1);

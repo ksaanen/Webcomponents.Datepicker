@@ -227,7 +227,8 @@ class datePicker extends HTMLElement {
           dateObj: i,
           hasAppointment: hasAppointment(i),
           isFull: isFull(i), // Only loop trough data again if data has appointment
-          isSelectable: isSelectable(i)
+          isSelectable: isSelectable(i),
+          isClosed: false // TODO
         };
 
         days.push(obj);
