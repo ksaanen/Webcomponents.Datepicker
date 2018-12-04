@@ -146,7 +146,7 @@ function datePicker(props: propsObject) {
       if (daysArray[day].isSelectable) d.className += ' date-picker--selectable';
       if (daysArray[day].hasAppointment) d.className += ' date-picker--appointment';
       if (daysArray[day].isFull) d.className += ' date-picker--full';
-      //if (daysArray[day].isFull) d.className += ' date-picker--closed';
+      if (daysArray[day].isClosed) d.className += ' date-picker--closed';
 
       datepicker.calendar.appendChild(d);
     }
@@ -191,7 +191,7 @@ function datePicker(props: propsObject) {
   }
 
   function isSelectable(date: Date): boolean {
-    return isBeforeEndDate(date) && isAfterStartDate(date) && !isFull(date);
+    return isBeforeEndDate(date) && isAfterStartDate(date) && !isFull(date) && !isClosed(date);
   }
 
   function shiftMonth(val: number): void {
@@ -224,6 +224,18 @@ function datePicker(props: propsObject) {
 
     return false;
   }
+  function isClosed(date: Date): boolean {
+    let _date = parseDateToString(date);
+    let _a = beschikbaarheidArray.map(function(e){
+      return parseDateToString(e.datum);
+    }).indexOf(_date);
+
+    if (_a !== -1) {
+      return beschikbaarheidArray[_a].isOpen === false;
+    }
+
+    return false;
+  }
 
   function daysObject(): dayObject[] {
     let iteration = new Date(<any>currentDate);
@@ -242,7 +254,8 @@ function datePicker(props: propsObject) {
         isToday: i.getTime() == todayDate.getTime(),
         dateObj: i,
         hasAppointment: hasAppointment(i),
-        isFull: isFull(i), // Only loop trough data again if data has appointment
+        isFull: isFull(i),
+        isClosed: isClosed(i), // Only loop trough data again if data has appointment
         isSelectable: isSelectable(i)
       };
 

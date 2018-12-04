@@ -49,6 +49,7 @@ export interface dayObject {
 
   hasAppointment: boolean;
   isFull: boolean;
+  isClosed: boolean;
 }
 
 export interface daysObject {

@@ -104,6 +104,8 @@ function datePicker(props) {
                 d.className += ' date-picker--appointment';
             if (daysArray[day].isFull)
                 d.className += ' date-picker--full';
+            if (daysArray[day].isClosed)
+                d.className += ' date-picker--closed';
             datepicker.calendar.appendChild(d);
         }
     }
@@ -140,7 +142,7 @@ function datePicker(props) {
         return true;
     }
     function isSelectable(date) {
-        return isBeforeEndDate(date) && isAfterStartDate(date) && !isFull(date);
+        return isBeforeEndDate(date) && isAfterStartDate(date) && !isFull(date) && !isClosed(date);
     }
     function shiftMonth(val) {
         currentDate.setMonth(currentDate.getMonth() + val);
@@ -166,6 +168,16 @@ function datePicker(props) {
         }
         return false;
     }
+    function isClosed(date) {
+        let _date = parseDateToString(date);
+        let _a = beschikbaarheidArray.map(function (e) {
+            return parseDateToString(e.datum);
+        }).indexOf(_date);
+        if (_a !== -1) {
+            return beschikbaarheidArray[_a].isOpen === false;
+        }
+        return false;
+    }
     function daysObject() {
         let iteration = new Date(currentDate);
         let days = [];
@@ -181,6 +193,7 @@ function datePicker(props) {
                 dateObj: i,
                 hasAppointment: hasAppointment(i),
                 isFull: isFull(i),
+                isClosed: isClosed(i),
                 isSelectable: isSelectable(i)
             };
             days.push(obj);
