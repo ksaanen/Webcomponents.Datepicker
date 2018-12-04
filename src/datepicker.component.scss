@@ -167,11 +167,14 @@
 
 // Statuses
 .date-picker--appointment {
-  background-color: orange;
+  background-color: moccasin;
+  color: white;
 }
 .date-picker--full {
-  background-color: red;
+  background-color: crimson;
+  color: white;
 }
 .date-picker--closed {
-  background-color: grey !important;
+  background-color: #EEE !important;
+  color: #CCC;
 }

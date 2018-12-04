@@ -1,26 +1,9 @@
 'use strict';
 
-import {datepickerDOM, dayObject, labels} from './datepicker.interface';
+import {datepickerDOM, dayObject, labels, propsObject, Beschikbaarheid} from './datepicker.interface';
 
 function insertAfter(newNode: HTMLElement, referenceNode: HTMLElement) {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-}
-
-type propsObject = {
-  ref: string,
-  from: string,
-  till: string,
-  beschikbaarheid: Beschikbaarheid[]
-}
-
-type Beschikbaarheid = {
-  datum: Date,
-  personeel_ochtend: number,
-  personeel_middag: number,
-  personeel_avond: number,
-  isOpen: boolean,
-  isFull: boolean,
-  hasBookings: boolean
 }
 
 function datePicker(props: propsObject) {
@@ -29,7 +12,7 @@ function datePicker(props: propsObject) {
   
   let currentDate: Date = new Date();
   const todayDate: Date = new Date();
-
+ 
   let labels: labels = {
     daysOfWeek: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za','Zo'],
     months: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']

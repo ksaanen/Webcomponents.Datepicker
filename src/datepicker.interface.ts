@@ -1,3 +1,76 @@
+// ENUMS
+
+export enum Months {
+  januari = 1,
+  februari,
+  maart,
+  april,
+  mei,
+  juni,
+  juli,
+  augustus,
+  september,
+  oktober,
+  november,
+  december
+}
+
+export enum Dag {
+  Maandag = 1,
+  Dinsdag,
+  Woensdag,
+  Donderdag,
+  Vrijdag,
+  Zaterdag,
+  Zondag
+}
+
+export enum Maand {
+  Januari = Months.januari,
+  Februari,
+  Maart,
+  April,
+  Mei,
+  Juni,
+  Juli,
+  Augustus,
+  September,
+  Oktober,
+  November,
+  December
+}
+
+// TYPES
+
+export type propsObject = {
+  ref: string,
+  from: string,
+  till: string,
+  beschikbaarheid: Beschikbaarheid[]
+}
+
+export type Beschikbaarheid = {
+  datum: Date,
+  personeel_ochtend: number,
+  personeel_middag: number,
+  personeel_avond: number,
+  isOpen: boolean,
+  isFull: boolean,
+  hasBookings: boolean
+}
+
+export type AvailableDate = {
+  datum: Date,
+  personeel_ochtend: number,
+  personeel_middag: number,
+  personeel_avond: number,
+  isOpen: boolean,
+  isFull: boolean,
+  hasBookings: boolean
+};
+
+
+// INTERFACES
 export interface datepickerDOM {
   input: HTMLInputElement;
   style: HTMLStyleElement;
@@ -18,22 +91,6 @@ export interface datepickerDOM {
   calendar: HTMLElement;
   footer: HTMLElement;
 }
-
-export enum Months {
-  januari = 0,
-  februari,
-  maart,
-  april,
-  mei,
-  juni,
-  juli,
-  augustus,
-  september,
-  oktober,
-  november,
-  december
-}
-
 export interface Appointment {
   date: Date | string,
   isFull: boolean
