@@ -10,27 +10,19 @@ import '@stencil/core';
 
 import {
   Appointment,
-} from './components/my-component/datepicker.interface';
+} from './components/date-picker/date-picker.interface';
 
 
 export namespace Components {
 
-  interface MyComponent {
+  interface DatePicker {
     'appointments': Appointment[];
-    /**
-    * The first name
-    */
-    'first': string;
     'from': string;
     'name': string;
     'till': string;
   }
-  interface MyComponentAttributes extends StencilHTMLAttributes {
+  interface DatePickerAttributes extends StencilHTMLAttributes {
     'appointments'?: Appointment[];
-    /**
-    * The first name
-    */
-    'first'?: string;
     'from'?: string;
     'name'?: string;
     'till'?: string;
@@ -39,26 +31,26 @@ export namespace Components {
 
 declare global {
   interface StencilElementInterfaces {
-    'MyComponent': Components.MyComponent;
+    'DatePicker': Components.DatePicker;
   }
 
   interface StencilIntrinsicElements {
-    'my-component': Components.MyComponentAttributes;
+    'date-picker': Components.DatePickerAttributes;
   }
 
 
-  interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {}
-  var HTMLMyComponentElement: {
-    prototype: HTMLMyComponentElement;
-    new (): HTMLMyComponentElement;
+  interface HTMLDatePickerElement extends Components.DatePicker, HTMLStencilElement {}
+  var HTMLDatePickerElement: {
+    prototype: HTMLDatePickerElement;
+    new (): HTMLDatePickerElement;
   };
 
   interface HTMLElementTagNameMap {
-    'my-component': HTMLMyComponentElement
+    'date-picker': HTMLDatePickerElement
   }
 
   interface ElementTagNameMap {
-    'my-component': HTMLMyComponentElement;
+    'date-picker': HTMLDatePickerElement;
   }
 
 

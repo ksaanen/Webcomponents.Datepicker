@@ -1,49 +1,53 @@
-import { Component, Prop } from '@stencil/core';
-import { labels, Appointment, dayObject } from './datepicker.interface';
+import { Component, Prop, State } from '@stencil/core';
+import { Appointment, dayObject } from './date-picker.interface';
 
 @Component({
-  tag: 'my-component',
-  styleUrl: 'my-component.css',
+  tag: 'date-picker',
+  styleUrl: 'date-picker.css',
   shadow: true
 })
-export class MyComponent {
-  /**
-   * The first name
-   */
-  @Prop() first: string;
-
-  @Prop() appointments: Appointment[];
-
+export class DatePicker {
+  /* Optional appointments object array to populate the datepicker */
+  @Prop() appointments: Appointment[] = [];
+  /* Name of the datepicker element to identify it's value */
   @Prop() name: string;
-
+  /* Earliest date for selectable range */
   @Prop() from: string;
-
+  /* Latest date for selectable range */
   @Prop() till: string;
 
-  self: any = this;
-  currentDate: Date = new Date();
-  todayDate: Date = new Date();
+  @State() currentDate: Date = new Date();
+  @State() _daysObject: any;
+  @State() _currentMonth: string;
+  @State() _currentYear: string;
 
-  private _labels: labels = {
-    daysOfWeek: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za','Zo'],
-    months: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']
+  todayDate: Date;
+  daysOfWeek: string[];
+  months: string[];
+
+  constructor(){
+    this.todayDate = new Date();
+    this.daysOfWeek = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za','Zo'];
+    this.months = ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'];
+    this.refresh();
   }
 
   private shiftMonth(val: number): void {
     this.currentDate.setMonth(this.currentDate.getMonth() + val);
+    this.refresh();
   }
 
-  private currentMonth(): string {
-    return this._labels.months[this.currentDate.getMonth()];
+  private get currentMonth(): string {
+    return this.months[this.currentDate.getMonth()];
   }
 
-  private currentYear(): string {
+  private get currentYear(): string {
     return this.currentDate.getFullYear() + '';
   }
 
-  // private parseDateToString(date: Date): string {
-  //   return (date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate());
-  // }
+  private parseDateToString(date: Date): string {
+    return (date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate());
+  }
 
   // Expects "YYYY/MM/DD" as input
   private convertStringToDate(str: string): Date {
@@ -56,27 +60,27 @@ export class MyComponent {
     return d;
   }
 
-  // private hasAppointment(date: Date): boolean {
-  //   let _date = this.parseDateToString(date);    
-  //   let _a = this.appointments.map(function(e){
-  //     return e.date;
-  //   }).indexOf(_date);
+  private hasAppointment(date: Date): boolean {
+    let _date = this.parseDateToString(date);    
+    let _a = this.appointments.map(function(e){
+      return e.date;
+    }).indexOf(_date);
 
-  //   return _a !== -1;
-  // }
+    return _a !== -1;
+  }
 
-  // private isFull(date: Date): boolean {
-  //   let _date = this.parseDateToString(date);
-  //   let _a = this.appointments.map(function(e){
-  //     return e.date;
-  //   }).indexOf(_date);
+  private isFull(date: Date): boolean {
+    let _date = this.parseDateToString(date);
+    let _a = this.appointments.map(function(e){
+      return e.date;
+    }).indexOf(_date);
 
-  //   if (_a !== -1) {
-  //     return this.appointments[_a].isFull;
-  //   }
+    if (_a !== -1) {
+      return this.appointments[_a].isFull;
+    }
 
-  //   return false;
-  // }
+    return false;
+  }
 
   private isBeforeEndDate(date: Date): boolean {
     if (this.till) {
@@ -97,7 +101,7 @@ export class MyComponent {
     return this.isBeforeEndDate(date) && this.isAfterStartDate(date) && !this.isFull(date);
   }
 
-  private get daysObject() {
+  private daysObjectFn() {
     let iteration = new Date(this.currentDate);
     let days: dayObject[] = [];
     iteration.setDate(1);
@@ -111,10 +115,10 @@ export class MyComponent {
         isNotInMonth: i.getMonth() !== this.currentDate.getMonth(),
         isToday: i.getTime() == this.todayDate.getTime(),
         dateObj: i,
-        //hasAppointment: this.hasAppointment(i),
-        //isFull: this.isFull(i), // Only loop trough data again if data has appointment
+        hasAppointment: this.hasAppointment(i),
+        isFull: this.isFull(i), // Only loop trough data again if data has appointment
         isSelectable: this.isSelectable(i),
-        //isClosed: false // TODO
+        isClosed: false // TODO
       };
 
       days.push(obj);
@@ -123,7 +127,12 @@ export class MyComponent {
     return days;
   }
 
-  
+  private refresh(): void {
+    this._daysObject = this.daysObjectFn();
+    this._currentMonth = this.currentMonth;
+    this._currentYear = this.currentYear;
+  }
+
 
   render() {
     return (
@@ -132,19 +141,19 @@ export class MyComponent {
           <div class="date-picker--header">
             <div class="date-picker--prev" onClick={()=>this.shiftMonth(-1)}></div>
             <div class="date-picker--month-year">
-              <div class="date-picker--month">{this.currentMonth()}</div>
-              <div class="date-picker--year">{this.currentYear()}</div>
+              <div class="date-picker--month">{this._currentMonth}</div>
+              <div class="date-picker--year">{this.currentYear}</div>
             </div>
             <div class="date-picker--next" onClick={()=>this.shiftMonth(1)}></div>
           </div>
           <div class="date-picker--body">
             <div class="date-picker--labels">
-              {this._labels.daysOfWeek.map((weekday) => 
+              {this.daysOfWeek.map((weekday) => 
                 <div class="date-picker--day-of-week">{weekday}</div>
               )}
             </div>
             <div class="date-picker--calendar">
-              {this.daysObject.map((day) =>
+              {this._daysObject.map((day) =>
                 <div class="date-picker--day">{day.daytitle}</div>
               )}
             </div>
