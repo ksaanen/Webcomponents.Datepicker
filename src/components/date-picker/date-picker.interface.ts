@@ -69,34 +69,7 @@ export type AvailableDate = {
   hasBookings: boolean
 };
 
-
-// INTERFACES
-export interface datepickerDOM {
-  input: HTMLInputElement;
-  style: HTMLStyleElement;
-  wrapper: HTMLElement;
-  inner: HTMLElement;
-  header: HTMLElement;
-
-  btnPrev: HTMLElement;
-  btnNext: HTMLElement;
-  btnToday: HTMLElement;
-
-  monthYear: HTMLElement;
-  month: HTMLElement;
-  year: HTMLElement;
-
-  body: HTMLElement;
-  labels: HTMLElement;
-  calendar: HTMLElement;
-  footer: HTMLElement;
-}
-export interface Appointment {
-  date: Date | string,
-  isFull: boolean
-}
-
-export interface dayObject {
+export type dayObject = {
   daytitle: any;
   isSelected: boolean;
   isNotInMonth: boolean;
@@ -109,6 +82,13 @@ export interface dayObject {
   isClosed: boolean;
 }
 
+
+// INTERFACES
+export interface Appointment {
+  date: Date | string,
+  isFull: boolean
+}
+
 export interface daysObject {
   days: dayObject[];
   iteration: number;
@@ -117,13 +97,4 @@ export interface daysObject {
 export interface labels {
   daysOfWeek: string[];
   months: string[];
-}
-
-export interface datepickerElementRef extends HTMLElement {
-  name: string,
-  value: string;
-  
-  // optional attributes
-  from?: string,
-  till?: string
 }

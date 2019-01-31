@@ -115,10 +115,11 @@ export class DatePicker {
         isNotInMonth: i.getMonth() !== this.currentDate.getMonth(),
         isToday: i.getTime() == this.todayDate.getTime(),
         dateObj: i,
+
         hasAppointment: this.hasAppointment(i),
-        isFull: this.isFull(i), // Only loop trough data again if data has appointment
+        isFull: this.isFull(i),
         isSelectable: this.isSelectable(i),
-        isClosed: false // TODO
+        isClosed: false
       };
 
       days.push(obj);
@@ -154,7 +155,7 @@ export class DatePicker {
             </div>
             <div class="date-picker--calendar">
               {this._daysObject.map((day) =>
-                <div class="date-picker--day">{day.daytitle}</div>
+                <div class={`date-picker--day ${day.isSelectable && 'date-picker--selectable'}  ${day.isToday && 'date-picker--day-today'}`}>{day.daytitle}</div>
               )}
             </div>
           </div>
