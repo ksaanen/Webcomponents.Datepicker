@@ -20,12 +20,14 @@ export namespace Components {
     'from': string;
     'name': string;
     'till': string;
+    'value': string;
   }
   interface DatePickerAttributes extends StencilHTMLAttributes {
     'appointments'?: Appointment[];
     'from'?: string;
     'name'?: string;
     'till'?: string;
+    'value'?: string;
   }
 }
 

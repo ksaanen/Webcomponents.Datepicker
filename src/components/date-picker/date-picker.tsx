@@ -7,14 +7,20 @@ import { Appointment, dayObject } from './date-picker.interface';
   shadow: true
 })
 export class DatePicker {
+
   /* Optional appointments object array to populate the datepicker */
   @Prop() appointments: Appointment[] = [];
+
   /* Name of the datepicker element to identify it's value */
   @Prop() name: string;
+
   /* Earliest date for selectable range */
   @Prop() from: string;
+  
   /* Latest date for selectable range */
   @Prop() till: string;
+
+  @Prop() value: string;
 
   @State() currentDate: Date = new Date();
   @State() _daysObject: any;
@@ -34,6 +40,11 @@ export class DatePicker {
 
   private shiftMonth(val: number): void {
     this.currentDate.setMonth(this.currentDate.getMonth() + val);
+    this.refresh();
+  }
+
+  private reset(): void {
+    this.currentDate = this.todayDate;
     this.refresh();
   }
 
@@ -134,7 +145,6 @@ export class DatePicker {
     this._currentYear = this.currentYear;
   }
 
-
   render() {
     return (
       <div class="date-picker--wrapper">
@@ -149,15 +159,18 @@ export class DatePicker {
           </div>
           <div class="date-picker--body">
             <div class="date-picker--labels">
-              {this.daysOfWeek.map((weekday) => 
+              {this.daysOfWeek.map((weekday) =>
                 <div class="date-picker--day-of-week">{weekday}</div>
               )}
             </div>
             <div class="date-picker--calendar">
               {this._daysObject.map((day) =>
-                <div class={`date-picker--day ${day.isSelectable && 'date-picker--selectable'}  ${day.isToday && 'date-picker--day-today'}`}>{day.daytitle}</div>
+                <div class={`date-picker--day ${day.isSelectable && 'date-picker--selectable'} ${day.isToday && 'date-picker--day-today'} ${day.isFull && 'date-picker--full'} ${day.isClosed && 'date-picker--closed'} ${day.isClosed && 'date-picker--appointment'}`}>{day.daytitle}</div>
               )}
             </div>
+          </div>
+          <div class="date-picker--footer">
+            <a class="reset" onClick={()=>this.reset()}>reset</a>
           </div>
         </div>
       </div>
