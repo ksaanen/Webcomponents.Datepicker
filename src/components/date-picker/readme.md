@@ -13,6 +13,7 @@
 | `from`         | `from`    |             | `string`        | `undefined` |
 | `name`         | `name`    |             | `string`        | `undefined` |
 | `till`         | `till`    |             | `string`        | `undefined` |
+| `value`        | `value`   |             | `string`        | `undefined` |
 
 
 ----------------------------------------------

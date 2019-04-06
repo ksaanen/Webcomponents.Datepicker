@@ -49,15 +49,18 @@ export class DatePicker {
   }
 
   private get currentMonth(): string {
-    return this.months[this.currentDate.getMonth()];
+    let _currentDate = new Date(this.currentDate);
+    return this.months[_currentDate.getMonth()];
   }
 
   private get currentYear(): string {
-    return this.currentDate.getFullYear() + '';
+    let _currentDate = new Date(this.currentDate);
+    return _currentDate.getFullYear() + '';
   }
 
   private parseDateToString(date: Date): string {
-    return (date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate());
+    let _date = new Date(date);
+    return (_date.getFullYear() + '/' + _date.getMonth() + '/' + _date.getDate());
   }
 
   // Expects "YYYY/MM/DD" as input
@@ -112,6 +115,14 @@ export class DatePicker {
     return this.isBeforeEndDate(date) && this.isAfterStartDate(date) && !this.isFull(date);
   }
 
+  private setDate(date: Date): void {
+    console.log(date);
+    if (this.isSelectable(date)) {
+      this.currentDate = new Date(date);
+      this.refresh()
+    }
+  }
+
   private daysObjectFn() {
     let iteration = new Date(this.currentDate);
     let days: dayObject[] = [];
@@ -120,11 +131,12 @@ export class DatePicker {
 
     for (let day = 0; day < (6 * 7); ++day) {
       let i = new Date(iteration);
+      let _currentDate = new Date(this.currentDate);
       let obj: dayObject = {
         daytitle: i.getDate(),
-        isSelected: i.getTime() === this.currentDate.getTime(),
-        isNotInMonth: i.getMonth() !== this.currentDate.getMonth(),
-        isToday: i.getTime() == this.todayDate.getTime(),
+        isSelected: i.getTime() === _currentDate.getTime(),
+        isNotInMonth: i.getMonth() !== _currentDate.getMonth(),
+        isToday: i.getTime() == _currentDate.getTime(),
         dateObj: i,
 
         hasAppointment: this.hasAppointment(i),
@@ -165,7 +177,7 @@ export class DatePicker {
             </div>
             <div class="date-picker--calendar">
               {this._daysObject.map((day) =>
-                <div class={`date-picker--day ${day.isSelectable && 'date-picker--selectable'} ${day.isToday && 'date-picker--day-today'} ${day.isFull && 'date-picker--full'} ${day.isClosed && 'date-picker--closed'} ${day.isClosed && 'date-picker--appointment'}`}>{day.daytitle}</div>
+                <div onClick={() => this.setDate(day.dateObj)} class={`date-picker--day ${day.isSelectable && 'date-picker--selectable'} ${day.isSelected && 'date-picker--selected'} ${day.isToday && 'date-picker--day-today'} ${day.isFull && 'date-picker--full'} ${day.isClosed && 'date-picker--closed'} ${day.isClosed && 'date-picker--appointment'}`}>{day.daytitle}</div>
               )}
             </div>
           </div>
